@@ -28,6 +28,7 @@ class ViewController: UIViewController {
     var timer: Timer!
 
     var isPlaying = false
+    var activityIndicatorAlert: UIAlertController?
 
     // MARK: Life cycle
     override func viewDidLoad() {
@@ -35,8 +36,18 @@ class ViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+    }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         requestQuiz()
+        
+//        let storyboard = UIStoryboard(name: "LoadingView", bundle: nil)
+//        let myAlert = storyboard.instantiateViewController(withIdentifier: "loadingAlert")
+//        myAlert.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+//        myAlert.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+//
+//        self.present(myAlert, animated: true)
     }
 
     // MARK: Private functions
@@ -54,24 +65,28 @@ class ViewController: UIViewController {
     }
     // MARK: Request
     private func requestQuiz() {
+        let alert = createLoadingAlert()
+        self.present(alert, animated: true, completion: nil)
+
         RequestManager.getQuiz { (quiz) in
-            if quiz == nil {
-                print("error")
-            } else {
-                self.mainViewModel = MainViewModel(question: quiz!.question!, answers: quiz!.answer!)
+            alert.dismiss(animated: true, completion: {
+                if quiz == nil {
+                    print("Error")
+                } else {
+                    self.mainViewModel = MainViewModel(question: quiz!.question!, answers: quiz!.answer!)
 
-                self.titleLabel.text = self.mainViewModel.question
-                self.totalWords = self.mainViewModel.answers.count
-
-                self.updateHitCountLabel()
-            }
+                    self.titleLabel.text = self.mainViewModel.question
+                    self.totalWords = self.mainViewModel.answers.count
+                    
+                    self.updateHitCountLabel()
+                }
+            })
         }
     }
     
-    // MARK: UI
+    // MARK: UI    
     @objc func updateTime() {
         self.totalTimeInSeconds -= 1
-        print("### Time in seconds: \(self.totalTimeInSeconds) - Time formatted \(mainViewModel.formatterSeconds(seconds: self.totalTimeInSeconds))")
 
         if totalTimeInSeconds < 0 {
             timer.invalidate()
@@ -88,7 +103,9 @@ class ViewController: UIViewController {
     }
 
     func updateHitCountLabel() {
-        self.hitCountLabel.text = "\(hitsCount)/\(totalWords)"
+        let formattedCount = String(format: "%02d", hitsCount)
+        
+        self.hitCountLabel.text = "\(formattedCount)/\(totalWords)"
     }
 
     func setupButtonToStart() {
@@ -97,6 +114,20 @@ class ViewController: UIViewController {
 
     func setupButtonToReset() {
         startOrResetButton.setTitle("Reset", for: .normal)
+    }
+
+    func createLoadingAlert() -> UIAlertController {
+        
+        let alert = UIAlertController(title: nil, message: "Loading...", preferredStyle: .alert)
+        
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.gray
+        loadingIndicator.startAnimating();
+
+        alert.view.addSubview(loadingIndicator)
+
+        return alert
     }
 
     // MARK: Alerts
@@ -180,4 +211,3 @@ struct Quiz: Decodable {
     var question: String?
     var answer: [String]?
 }
-

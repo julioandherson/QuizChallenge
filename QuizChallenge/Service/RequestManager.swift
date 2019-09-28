@@ -22,8 +22,6 @@ class RequestManager {
                         let quiz = try JSONDecoder().decode(Quiz.self, from: data!)
                         
                         completionHandler(quiz)
-                        print("QUESTION: \(quiz.question!)")
-                        print("ANSWERS: \(quiz.answer!)")
                     } catch {
                         print("Error on decode")
                         completionHandler(nil)

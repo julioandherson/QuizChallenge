@@ -23,7 +23,7 @@ class MainViewModel {
         let seconds: Int = Int(duration) % 60
         let minutes: Int = Int(duration) / 60
         
-        let formattedDuration = String(format: "%0d:%02d", minutes, seconds)
+        let formattedDuration = String(format: "%02d:%02d", minutes, seconds)
         return formattedDuration
     }
 }

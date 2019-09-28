@@ -47,19 +47,19 @@ class QuizChallengeTests: XCTestCase {
 
     func testSecondsFormatter() {
         var seconds = mockedViewModel.formatterSeconds(seconds: 300)
-        XCTAssertTrue(seconds == "5:00", "Must be 05:00")
+        XCTAssertTrue(seconds == "05:00", "Must be 05:00")
         
         seconds = mockedViewModel.formatterSeconds(seconds: 200)
-        XCTAssertTrue(seconds == "3:20", "Must be 3:20")
+        XCTAssertTrue(seconds == "03:20", "Must be 03:20")
 
         seconds = mockedViewModel.formatterSeconds(seconds: 150)
-        XCTAssertTrue(seconds == "2:30", "Must be 2:30")
+        XCTAssertTrue(seconds == "02:30", "Must be 02:30")
 
         seconds = mockedViewModel.formatterSeconds(seconds: 50)
-        XCTAssertTrue(seconds == "0:50", "Must be 0:50")
+        XCTAssertTrue(seconds == "00:50", "Must be 00:50")
 
         seconds = mockedViewModel.formatterSeconds(seconds: 0)
-        XCTAssertTrue(seconds == "0:00", "Must be 0:00")
+        XCTAssertTrue(seconds == "00:00", "Must be 00:00")
 
     }
 
