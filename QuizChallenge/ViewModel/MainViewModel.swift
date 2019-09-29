@@ -8,15 +8,25 @@
 
 import Foundation
 
+/// The view model to manager object Quiz.
 class MainViewModel {
+    /// The quiz question.
     var question: String
+    /// The quiz answers list.
     var answers: [String]
     
+    /// Init view model function.
+    /// - Parameters:
+    ///   - question: The question.
+    ///   - answers: The answers list.
     init(question: String, answers: [String]) {
         self.question = question
         self.answers = answers
     }
 
+    /// Formatter seconds to minutes with the following pattern: mm:ss
+    /// - Parameter seconds: The seconds.
+    /// - Returns: The formatted time.
     func formatterSeconds(seconds: Int) -> String {
         let duration: TimeInterval = Double.init(exactly: seconds)!
         

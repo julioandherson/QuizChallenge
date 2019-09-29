@@ -8,7 +8,11 @@
 
 import Foundation
 
+/// Resposible to manager requests.
 class RequestManager {
+    
+    /// Request to get Quiz informations.
+    /// - Parameter completionHandler: The completion handler.
     static func getQuiz(completionHandler: @escaping (Quiz?) -> Void) {
         let url = URL(string: "https://codechallenge.arctouch.com/quiz/1")!
         
