@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2801A2802341355600DF0F22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2801A27F2341355600DF0F22 /* Localizable.strings */; };
 		2829B9B8233FD23200F50AC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2829B9B7233FD23200F50AC8 /* AppDelegate.swift */; };
 		2829B9BA233FD23200F50AC8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2829B9B9233FD23200F50AC8 /* ViewController.swift */; };
 		2829B9BD233FD23200F50AC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2829B9BB233FD23200F50AC8 /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2801A27F2341355600DF0F22 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		2829B9B4233FD23200F50AC8 /* QuizChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuizChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2829B9B7233FD23200F50AC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2829B9B9233FD23200F50AC8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				2829B9BE233FD23300F50AC8 /* Assets.xcassets */,
 				2829B9C0233FD23300F50AC8 /* LaunchScreen.storyboard */,
 				2829B9C3233FD23300F50AC8 /* Info.plist */,
+				2801A27F2341355600DF0F22 /* Localizable.strings */,
 			);
 			path = QuizChallenge;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2801A2802341355600DF0F22 /* Localizable.strings in Resources */,
 				2829B9C2233FD23300F50AC8 /* LaunchScreen.storyboard in Resources */,
 				2829B9BF233FD23300F50AC8 /* Assets.xcassets in Resources */,
 				286D435323402061007052EC /* LoadingView.storyboard in Resources */,

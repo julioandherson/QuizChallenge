@@ -83,13 +83,20 @@ class ViewController: UIViewController {
         RequestManager.getQuiz { (quiz) in
             alert.dismiss(animated: true, completion: {
                 if quiz == nil {
-                    print("Error")
+                    let alert = UIAlertController.init(title: NSLocalizedString("request.error.title", comment: "The request title error"),
+                                                       message: NSLocalizedString("request.error.message", comment: "The request message error"),
+                                                       preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("alert.retry.button", comment: "The request retry button"),
+                                                  style: .default, handler: { _ in
+                        self.requestQuiz()
+                    }))
+                    self.present(alert, animated: true, completion: nil)
                 } else {
                     self.mainViewModel = MainViewModel(question: quiz!.question!, answers: quiz!.answer!)
 
                     self.titleLabel.text = self.mainViewModel.question
                     self.totalWords = self.mainViewModel.answers.count
-                    
+
                     self.updateHitCountLabel()
                 }
             })
@@ -125,20 +132,21 @@ class ViewController: UIViewController {
 
     /// Set button title to Start.
     func setupButtonToStart() {
-        startOrResetButton.setTitle("Start", for: .normal)
+        startOrResetButton.setTitle(NSLocalizedString("start", comment: "The start button"), for: .normal)
     }
     
     /// Set button title to Reset.
     func setupButtonToReset() {
-        startOrResetButton.setTitle("Reset", for: .normal)
+        startOrResetButton.setTitle(NSLocalizedString("reset", comment: "The reset button"), for: .normal)
     }
 
     // MARK: Alerts
     /// Create Alert with Loading indicator.
     /// - Returns: The alert.
     func createLoadingAlert() -> UIAlertController {
-
-        let alert = UIAlertController(title: nil, message: "Loading...", preferredStyle: .alert)
+        let alert = UIAlertController(title: nil,
+                                      message: NSLocalizedString("loading", comment: "The loading message"),
+                                      preferredStyle: .alert)
 
         let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
         loadingIndicator.hidesWhenStopped = true
@@ -155,10 +163,11 @@ class ViewController: UIViewController {
         timer.invalidate()
         timer = nil
 
-        let alert = UIAlertController(title: "Congratulations",
-                                      message: "Good job! You found all the aswers on time. Keep up with the great work.",
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Play again", style: .default, handler: { _ in
+        let alert = UIAlertController(title: NSLocalizedString("alert.success.title", comment: "The success title"),
+                                      message: NSLocalizedString("alert.success.message", comment: "The success message"),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("alert.success.button", comment: "The success button"),
+                                      style: .default, handler: { _ in
             self.reset()
         }))
         self.present(alert, animated: true, completion: nil)
@@ -166,10 +175,13 @@ class ViewController: UIViewController {
 
     /// Show retry alert.
     private func showRetryAlert() {
-        let alert = UIAlertController(title: "Time finished",
-                                      message: "Sorry, tie is up! You got \(self.hitsCount) out of \(totalWords) answers.",
+        
+        let alert = UIAlertController(title: NSLocalizedString("alert.retry.title", comment: "The retry title"),
+                                      message: String(format: NSLocalizedString("alert.retry.message", comment: "The retry message"),
+                                               String(self.hitsCount), String(self.totalWords)),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("alert.retry.button", comment: "The retry button"),
+                                      style: .default, handler: { _ in
             self.reset()
         }))
         self.present(alert, animated: true, completion: nil)
