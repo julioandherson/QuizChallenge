@@ -39,12 +39,25 @@ class ViewController: UIViewController {
     /// The isPlaying flag.
     var isPlaying = false
 
+    var keyboardAdjusted = false
+    
+    var lastKeyboardOffset: CGFloat = 0
+    
+    @IBOutlet weak var bottomViewConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var titleLabelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleLabelTopConstraint: NSLayoutConstraint!
+    
+
     // MARK: Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification , object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification , object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -58,7 +71,34 @@ class ViewController: UIViewController {
 //
 //        self.present(myAlert, animated: true)
     }
-
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if keyboardAdjusted == false {
+            lastKeyboardOffset = getKeyboardHeight(notification: notification)
+//            view.frame.origin.y -= lastKeyboardOffset
+            bottomViewConstraint.constant -= lastKeyboardOffset
+            titleLabelHeightConstraint.constant = 20
+            titleLabelTopConstraint.constant = 10
+            keyboardAdjusted = true
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if keyboardAdjusted == true {
+//            view.frame.origin.y += lastKeyboardOffset
+            bottomViewConstraint.constant += lastKeyboardOffset
+            titleLabelHeightConstraint.constant = 95
+            titleLabelTopConstraint.constant = 44
+            keyboardAdjusted = false
+        }
+    }
+    
+    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardSize.cgRectValue.height
+    }
+    
     // MARK: Private functions
     /// Reset all quiz data.
     private func reset() {
