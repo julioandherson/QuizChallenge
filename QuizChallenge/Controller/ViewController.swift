@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// The main ViewController.
 class ViewController: UIViewController {
     // MARK: Outlets
     /// The tableView.
@@ -20,6 +21,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var timerLabel: UILabel!
     /// The startOrResetButton.
     @IBOutlet weak var startOrResetButton: UIButton!
+    /// The keyboardTextField.
+    @IBOutlet weak var keywordTextField: UITextField!
 
     // MARK: View Model
     /// The MainViewModel.
@@ -39,22 +42,28 @@ class ViewController: UIViewController {
     /// The isPlaying flag.
     var isPlaying = false
 
+    // MARK: Constraints
+    /// The keyboardAdjusted flag.
     var keyboardAdjusted = false
-    
+    /// The keyboardOffset.
     var lastKeyboardOffset: CGFloat = 0
-    
+    /// The bottomView Constraint.
     @IBOutlet weak var bottomViewConstraint: NSLayoutConstraint!
-
+    /// The titleLabelHeight Constraint.
     @IBOutlet weak var titleLabelHeightConstraint: NSLayoutConstraint!
+    /// The titleLabelTopConstraint.
     @IBOutlet weak var titleLabelTopConstraint: NSLayoutConstraint!
-    
+    /// The bottomViewHeightConstraint.
+    @IBOutlet weak var bottomViewHeightConstraint: NSLayoutConstraint!
 
     // MARK: Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         tableView.delegate = self
         tableView.dataSource = self
+
+        keywordTextField.delegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification , object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification , object: nil)
@@ -63,40 +72,59 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         requestQuiz()
-        
-//        let storyboard = UIStoryboard(name: "LoadingView", bundle: nil)
-//        let myAlert = storyboard.instantiateViewController(withIdentifier: "loadingAlert")
-//        myAlert.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-//        myAlert.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-//
-//        self.present(myAlert, animated: true)
     }
-    
+
+    // MARK: Constraints Adjusts
+    /// Show keyboard callback.
+    /// - Parameter notification: The notification
     @objc func keyboardWillShow(notification: NSNotification) {
         if keyboardAdjusted == false {
             lastKeyboardOffset = getKeyboardHeight(notification: notification)
-//            view.frame.origin.y -= lastKeyboardOffset
+
             bottomViewConstraint.constant -= lastKeyboardOffset
-            titleLabelHeightConstraint.constant = 20
-            titleLabelTopConstraint.constant = 10
             keyboardAdjusted = true
+
+            if UIDevice.current.orientation.isLandscape {
+                titleLabelHeightConstraint.constant = 0
+                titleLabelTopConstraint.constant = 5
+            } else {
+                setupDefaultPortraitConstraints()
+            }
         }
     }
-    
+
+    /// Hide keyboard callback.
+    /// - Parameter notification: The notification.
     @objc func keyboardWillHide(notification: NSNotification) {
         if keyboardAdjusted == true {
-//            view.frame.origin.y += lastKeyboardOffset
             bottomViewConstraint.constant += lastKeyboardOffset
+
             titleLabelHeightConstraint.constant = 95
             titleLabelTopConstraint.constant = 44
             keyboardAdjusted = false
+
+            if UIDevice.current.orientation.isLandscape {
+                titleLabelHeightConstraint.constant = 16
+                titleLabelTopConstraint.constant = 5
+            } else {
+                setupDefaultPortraitConstraints()
+            }
         }
     }
-    
+
+    /// Get keyboard size.
+    /// - Parameter notification: The notification.
+    /// - Returns: The size.
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
         return keyboardSize.cgRectValue.height
+    }
+
+    /// Setup constraints values for constraints with portraint orientation.
+    func setupDefaultPortraitConstraints() {
+        titleLabelHeightConstraint.constant = 95
+        titleLabelTopConstraint.constant = 44
     }
     
     // MARK: Private functions
@@ -142,7 +170,7 @@ class ViewController: UIViewController {
             })
         }
     }
-    
+
     // MARK: UI
     /// Called each second to update labels or endgame.
     @objc func updateTime() {
@@ -266,7 +294,7 @@ class ViewController: UIViewController {
     }
 }
 
-// MARK: TableView
+// MARK: TableView Delegate
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return hitKeyWordsList.count
@@ -274,9 +302,26 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = self.hitKeyWordsList[indexPath.row]
+        cell.textLabel?.text = self.hitKeyWordsList[indexPath.row].firstUppercased
 
         return cell
+    }
+}
+
+// MARK: TextField Delegate
+extension ViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+}
+
+// MARK: StringProtocol
+extension StringProtocol {
+
+    /// First character uppercased.
+    var firstUppercased: String {
+        return prefix(1).uppercased() + dropFirst()
     }
 }
 

@@ -19,7 +19,7 @@ class RequestManager {
         let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
             DispatchQueue.main.async {
                 if error != nil {
-                    print("Error: \(error)")
+                    print("Request error: \(error!)")
                     completionHandler(nil)
                 } else {
                     do {
@@ -27,7 +27,7 @@ class RequestManager {
                         
                         completionHandler(quiz)
                     } catch {
-                        print("Error on decode")
+                        print("Decode error")
                         completionHandler(nil)
                     }
                 }
