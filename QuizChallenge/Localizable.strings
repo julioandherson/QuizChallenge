@@ -1,0 +1,18 @@
+// Common
+"loading" = "Loading...";
+"start" = "Start";
+"reset" = "Reset";
+
+// Request error
+"request.error.title" = "Request Error";
+"request.error.message" = "Unknown error";
+
+// Success Alert
+"alert.success.title" = "Congratulations";
+"alert.success.message" = "Good job! You found all the aswers on time. Keep up with the great work.";
+"alert.success.button" = "Play again";
+
+// Retry Alert
+"alert.retry.title" = "Time finished";
+"alert.retry.message" = "Sorry, time is up! You got %@ out of %@ answers.";
+"alert.retry.button" = "Try again";
